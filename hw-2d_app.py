@@ -51,6 +51,7 @@ fig_col1, fig_col2 = st.columns(2)
 
 with fig_col1:
     #Map
+        map_score=df.groupby(['STATE'])[x_val].mean().reset_index().sort_values(by=x_val, ascending=False)
         st.markdown("### Diet preference by state")
         st.write(f"Average score of {x_val} per State")
         #Map
@@ -58,7 +59,7 @@ with fig_col1:
 
         choropleth = folium.Choropleth(
         geo_data = 'us-state-boundaries.geojson',
-        data=df,
+        data=map_score,
         columns=('STATE', x_val),
         key_on='feature.properties.stusab',
         line_opacity=0.8,
