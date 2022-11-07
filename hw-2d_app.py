@@ -12,7 +12,7 @@ st.set_page_config(layout='wide', initial_sidebar_state='expanded')
 
 with open('style.css') as f:
     st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
-st.sidebar.header('Dashboard `version 1.2`')
+st.sidebar.header('Dashboard `version 1.3`')
 
 df = pd.read_csv('midterm.csv')
 
@@ -28,10 +28,22 @@ if state_name =="":
 else:
     filtered_df = df[df['STATE']==state_name]
 
+top_state=df.groupby(['STATE'])[x_val].mean().reset_index().sort_values(by=x_val, ascending=False)[:1]
+top_city=df.groupby(['CITY'])[x_val].mean().reset_index().sort_values(by=x_val, ascending=False)[:1]
+top_edu=df.groupby(['AIQ_EDUCATION_V2'])[x_val].mean().reset_index().sort_values(by=x_val, ascending=False)[:1]
+state = top_state['STATE'].values[0]
+city = top_city['CITY'].values[0]
+edu = top_edu['AIQ_EDUCATION_V2'].values[0]
 
 st.title(APP_TITLE)
 st.caption(APP_SUB_TITLE)   
 
+# Row A
+st.markdown('### Metrics')
+col1, col2, col3 = st.columns(3)
+col1.metric("Top State", state)
+col2.metric("Top City", city)
+col3.metric("Top Education Level", edu)
 
 #Columns
 # create two columns for charts
@@ -81,3 +93,6 @@ with fig_col2:
         alt.Y('STATE', title="STATES", sort='-x')
         )
         st.altair_chart(bar, use_container_width=True)
+
+
+
